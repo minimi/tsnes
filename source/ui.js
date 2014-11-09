@@ -276,6 +276,9 @@ if (typeof jQuery !== 'undefined') {
                 },
             
                 writeAudio: function(samples) {
+                    if (WebAudio && WebAudio.audioContext) {
+                        return WebAudio.writeInt(samples);
+                    }
                     return this.dynamicaudio.writeInt(samples);
                 },
             
