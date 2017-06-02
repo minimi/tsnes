@@ -7,3 +7,5 @@ jsnes.tmproj
 /node_modules
 /.idea/
 .idea
+/roms/
+

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "es6",
+    "target": "es2015",
+    "sourceMap": true,
+    "outDir": "build/",
+    "sourceRoot": "src/",
+    "lib": ["es6","dom","es2015","es5"]
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

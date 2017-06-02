@@ -1,16 +1,14 @@
 {
-  "name": "jsnes",
-  "version": "0.0.0",
+  "name": "tsnes",
+  "version": "0.0.1",
   "description": "A JavaScript NES emulator",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/bfirsh/jsnes.git"
+  "license": "GPL-3.0",
+  "scripts": {
+    "build": "./node_modules/.bin/tsc"
   },
-  "license": "BSD",
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-uglify": "~0.2.1",
-    "grunt-contrib-jshint": "~0.5.4"
+    "tslint": "^5.3.2",
+    "typescript": "^2.3.3",
+    "webpack": "^2.6.1"
   }
 }
