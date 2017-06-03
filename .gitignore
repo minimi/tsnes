@@ -8,4 +8,5 @@ jsnes.tmproj
 /.idea/
 .idea
 /roms/
-
+/buiid/
+/dist/

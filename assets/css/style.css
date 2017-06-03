@@ -1,0 +1,22 @@
+#nes-screen {
+    transition: width 2s, height 2s;                /* CSS3 */
+    -moz-transition: width 2s, height 2s;           /* Firefox */
+    -webkit-transition: width 2s, height 2s;        /* Safari and Chrome */
+    -o-transition: width 2s, height 2s;             /* Opera */
+}
+.zoomed {
+    width: 512px;
+    height: 480px;
+}
+.not-zoomed {
+    width: 256px;
+    height: 240px;
+}
+.page {
+    width: 940px;
+    margin: auto;
+    background-color: #fff;
+}
+.replies {
+    float: right;
+}

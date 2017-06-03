@@ -4,9 +4,10 @@
   "description": "A JavaScript NES emulator",
   "license": "GPL-3.0",
   "scripts": {
-    "build": "./node_modules/.bin/tsc"
+    "build": "./node_modules/.bin/webpack"
   },
   "devDependencies": {
+    "ts-loader": "^2.1.0",
     "tslint": "^5.3.2",
     "typescript": "^2.3.3",
     "webpack": "^2.6.1"
