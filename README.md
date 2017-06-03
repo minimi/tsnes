@@ -18,6 +18,10 @@ Then run:
 
 This will create ``jsnes.js`` and ``jsnes-min.js`` in ``build/``.
 
+Why TS?
+-------
+I just practicing TS and i like JSNES :) 
+
 Benchmark
 ---------
 
