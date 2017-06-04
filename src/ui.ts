@@ -17,16 +17,14 @@
  */
 
 import Utils from './utils';
-import WebAudio from './webaudio';
 
 export class UI {
 
-  private nes;
+  private nes: any;
   private roms: any;
   private el: HTMLElement;
 
   private zoomed;
-  private root: HTMLElement;
   private screen: HTMLCanvasElement;
   private romContainer: HTMLElement;
   private romSelect: HTMLSelectElement;
@@ -34,32 +32,27 @@ export class UI {
   private controls: Element;
   private buttons;
   private status: HTMLElement;
-  private canvasContext;
-  private canvasImageData;
-  private webAudio: WebAudio;
-
-  public uiSettings;
+  private canvasContext : CanvasRenderingContext2D;
+  private canvasImageData : ImageData;
 
   public constructor(el, roms, nes) {
     this.nes = nes;
-
     this.el = el;
-
     this.roms = roms;
 
     this.zoomed = false;
 
     if (window.localStorage) {
       this.zoomed = Utils.strToBool(window.localStorage.getItem('zoom'));
-      //TODO: Here was this.nes
+
       //this.nes.opts.emulateSound = Utils.strToBool(window.localStorage.getItem('sound'));
-      this.uiSettings.emulateSound = Utils.strToBool(window.localStorage.getItem('sound'));
+      this.nes.opts.emulateSound = Utils.strToBool(window.localStorage.getItem('sound'));
     }
 
     /*
-     * Create UI
+     * UI page bindings
      */
-    this.screen = this.el.querySelector('nes-screen') as HTMLCanvasElement;
+    this.screen = this.el.querySelector('#nes-screen') as HTMLCanvasElement;
 
     if (!this.screen.getContext) {
       this.el.innerHTML = ('Your browser doesn\'t support the <code>&lt;canvas&gt;</code> tag. Try Google Chrome, Safari, Opera or Firefox!');
@@ -67,19 +60,19 @@ export class UI {
     }
 
     this.romContainer = document.getElementById('nes-roms');
-    this.romSelect = this.el.querySelector('rom-select') as HTMLSelectElement;
+    this.romSelect = this.el.querySelector('#rom-select') as HTMLSelectElement;
 
-    this.romUpload = this.el.querySelector('rom-file');
+    this.romUpload = this.el.querySelector('#rom-file');
 
-    this.controls = this.el.querySelector('nes-controls');
+    this.controls = this.el.querySelector('#nes-controls');
 
     this.buttons = {
-      pause: this.el.querySelector('btn-pause'),
-      restart: this.el.querySelector('btn-restart'),
-      sound: this.el.querySelector('btn-sound'),
-      zoom: this.el.querySelector('btn-zoom')
+      pause: this.el.querySelector('#btn-pause'),
+      restart: this.el.querySelector('#btn-restart'),
+      sound: this.el.querySelector('#btn-sound'),
+      zoom: this.el.querySelector('#btn-zoom')
     };
-    this.status = this.el.querySelector('nes-status') as HTMLElement;
+    this.status = this.el.querySelector('#nes-status') as HTMLElement;
 
 
     if (this.zoomed) {
@@ -92,7 +85,7 @@ export class UI {
       this.buttons.zoom.childNodes[1].data = 'Zoom in';
     }
 
-    if (this.uiSettings.emulateSound) {
+    if (this.nes.opts.emulateSound) {
       this.buttons.sound.childNodes[0].setAttribute('class', 'icon-volume-mute');
       this.buttons.sound.childNodes[1].data = 'Disable Sound';
     } else {
@@ -103,17 +96,16 @@ export class UI {
     /*
      * ROM loading
      */
-    this.romSelect.addEventListener('change', function () {
+    this.romSelect.addEventListener('change', () => {
       this.loadROM();
     });
 
-
     // These should be changed to use bind when jquery adds dataTransfer to its Event object.
-    this.root.addEventListener('dragenter', Utils.cancelEvent, false);
+    this.el.addEventListener('dragenter', Utils.cancelEvent, false);
 
-    this.root.addEventListener('dragover', Utils.cancelEvent, false);
+    this.el.addEventListener('dragover', Utils.cancelEvent, false);
 
-    this.root.addEventListener('drop', (e) => {
+    this.el.addEventListener('drop', (e) => {
       Utils.cancelEvent(e);
       if (!e.dataTransfer) {
         this.updateStatus('Your browser doesn\'t support reading local files (FileAPI).');
@@ -255,21 +247,11 @@ export class UI {
       this.nes.keyboard.keyPress(evt);
     });
 
-    /*
-     * Sound
-     */
-    this.webAudio = new WebAudio();
-
-    if (!this.webAudio || !this.webAudio.audioContext) {
-      //TODO: Add dynamic audio support
-      //this.dynamicaudio = new DynamicAudio({
-      //  swf: nes.opts.swfPath + 'dynamicaudio.swf'
-      //});
-    }
+    this.nes.canvasContext = this.canvasContext;
+    this.nes.canvasImageData = this.canvasImageData;
   }
 
-
-  public loadROM(): boolean {
+  private loadROM(): boolean {
     this.updateStatus('Downloading...');
 
     let xhr = new XMLHttpRequest();
@@ -309,7 +291,6 @@ export class UI {
     }
   }
 
-
   public resetCanvas() {
     this.canvasContext.fillStyle = 'black';
     // set alpha to opaque
@@ -320,7 +301,6 @@ export class UI {
       this.canvasImageData.data[i] = 0xFF;
     }
   }
-
 
   /*
    * Enable and reset UI elements
@@ -370,31 +350,6 @@ export class UI {
   }
 
 
-  public writeAudio(samples) {
-    return this.webAudio.writeInt(samples);
-
-    //TODO: DynamicAudio output
-    //return this.dynamicaudio.writeInt(samples);
-  }
-
-  public writeFrame(buffer, prevBuffer) {
-    let imageData = this.canvasImageData.data;
-    let pixel, i, j;
-
-    for (i = 0; i < 256 * 240; i++) {
-      pixel = buffer[i];
-
-      if (pixel != prevBuffer[i]) {
-        j = i * 4;
-        imageData[j] = pixel & 0xFF;
-        imageData[j + 1] = (pixel >> 8) & 0xFF;
-        imageData[j + 2] = (pixel >> 16) & 0xFF;
-        prevBuffer[i] = pixel;
-      }
-    }
-
-    this.canvasContext.putImageData(this.canvasImageData, 0, 0);
-  }
 
 }
 

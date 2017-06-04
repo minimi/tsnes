@@ -21,7 +21,7 @@ import {PPU} from './ppu';
 import {PAPU} from './papu';
 import {ROM} from './rom';
 import {Keyboard} from './keyboard';
-
+import WebAudio from './webaudio';
 
 type JSNESOpts = {
   preferredFrameRate?: number,
@@ -42,9 +42,10 @@ export class JSNES {
   private cpu;
   private ppu;
   private papu;
-  private mmap;
+  public mmap;
   private rom;
-  private keyboard;
+  private keyboard: Keyboard;
+  private webAudio: WebAudio;
 
   private isRunning = false;
   private fpsFrameCount = 0;
@@ -54,13 +55,16 @@ export class JSNES {
   private lastFrameTime;
   private lastFpsTime;
 
+  public canvasContext : CanvasRenderingContext2D;
+  public canvasImageData : ImageData;
+
   public constructor(opts?) {
     this.opts = {
       preferredFrameRate: 60,
       fpsInterval: 500, // Time between updating FPS in ms
       showDisplay: true,
 
-      emulateSound: false,
+      emulateSound: true,
       sampleRate: 44100, // Sound sample rate in hz
 
       CPU_FREQ_NTSC: 1789772.5, //1789772.72727272d;
@@ -81,10 +85,29 @@ export class JSNES {
     this.ppu = new PPU.PPU(this);
     this.papu = new PAPU.PAPU(this);
     this.mmap = null; // set in loadRom()
+
+    console.log('Init keyboard...');
     this.keyboard = new Keyboard();
+    console.log('End init keyboard...');
+
+    /*
+     * Sound
+     */
+    console.log('Init WebAudio...');
+
+    this.webAudio = new WebAudio();
+
+    if (!this.webAudio || !this.webAudio.audioContext) {
+      console.error('Unable to load WebAudio');
+    } else {
+      console.dir(this.webAudio);
+    }
+
+    console.log('End init WebAudio.');
 
     //this.ui.updateStatus("Ready to load a ROM.");
     this.emitEvent('updateStatus', 'Ready to load a ROM.');
+    console.info('Ready to load ROM');
   }
 
   private emitEvent(eventName, data) {
@@ -93,7 +116,7 @@ export class JSNES {
   }
 
   // Resets the system
-  reset() {
+  public reset() {
     if (this.mmap !== null) {
       this.mmap.reset();
     }
@@ -103,7 +126,7 @@ export class JSNES {
     this.papu.reset();
   }
 
-  start() {
+  public start() {
     if (this.rom !== null && this.rom.valid) {
       if (!this.isRunning) {
         this.isRunning = true;
@@ -126,8 +149,7 @@ export class JSNES {
     }
   }
 
-
-  frame() {
+  public frame() {
     this.ppu.startFrame();
     var cycles = 0;
     var emulateSound = this.opts.emulateSound;
@@ -188,8 +210,7 @@ export class JSNES {
     this.lastFrameTime = +new Date();
   }
 
-
-  printFps() {
+  public printFps() {
     var now = +new Date();
     var s = 'Running';
     if (this.lastFpsTime) {
@@ -204,14 +225,14 @@ export class JSNES {
   }
 
 
-  stop() {
+  public stop() {
     clearInterval(this.frameInterval);
     clearInterval(this.fpsInterval);
     this.isRunning = false;
   }
 
 
-  reloadRom() {
+  public reloadRom() {
     if (this.romData !== null) {
       this.loadRom(this.romData);
     }
@@ -220,13 +241,14 @@ export class JSNES {
 
   // Loads a ROM file into the CPU and PPU.
   // The ROM file is validated first.
-  loadRom(data) {
+  public loadRom(data) {
     if (this.isRunning) {
       this.stop();
     }
 
     //this.ui.updateStatus("Loading ROM...");
     this.emitEvent('updateStatus', 'Loading ROM...');
+    console.log('Loading ROM....');
 
     // Load ROM file:
     this.rom = new ROM(this);
@@ -244,27 +266,52 @@ export class JSNES {
 
       //this.ui.updateStatus("Successfully loaded. Ready to be started.");
       this.emitEvent('updateStatus', 'Successfully loaded. Ready to be started.');
+      console.log('Successfully loaded. Ready to be started.');
     }
     else {
       //this.ui.updateStatus("Invalid ROM!");
       this.emitEvent('updateStatus', 'Invalid ROM!');
+      console.error('Invalid ROM!');
     }
     return this.rom.valid;
   }
 
 
-  resetFps() {
+  public resetFps() {
     this.lastFpsTime = null;
     this.fpsFrameCount = 0;
   }
 
-  setFramerate(rate) {
+  public setFramerate(rate) {
     this.opts.preferredFrameRate = rate;
     this.frameTime = 1000 / rate;
     this.papu.setSampleRate(this.opts.sampleRate, false);
   }
 
-  toJSON() {
+  public writeAudio(samples) {
+    return this.webAudio.writeInt(samples);
+  }
+
+  public writeFrame(buffer, prevBuffer) {
+    let imageData = this.canvasImageData.data;
+    let pixel, i, j;
+
+    for (i = 0; i < 256 * 240; i++) {
+      pixel = buffer[i];
+
+      if (pixel !== prevBuffer[i]) {
+        j = i * 4;
+        imageData[j] = pixel & 0xFF;
+        imageData[j + 1] = (pixel >> 8) & 0xFF;
+        imageData[j + 2] = (pixel >> 16) & 0xFF;
+        prevBuffer[i] = pixel;
+      }
+    }
+
+    this.canvasContext.putImageData(this.canvasImageData, 0, 0);
+  }
+
+  public toJSON() {
     return {
       'romData': this.romData,
       'cpu': this.cpu.toJSON(),
@@ -273,7 +320,7 @@ export class JSNES {
     };
   }
 
-  fromJSON(s) {
+  public fromJSON(s) {
     this.loadRom(s.romData);
     this.cpu.fromJSON(s.cpu);
     this.mmap.fromJSON(s.mmap);

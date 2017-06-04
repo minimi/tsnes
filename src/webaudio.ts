@@ -1,14 +1,17 @@
 export default class WebAudio {
-  public audioContext: any;
+
+  public audioContext: AudioContext;
 
   public constructor() {
-
     try {
       this.audioContext = new AudioContext();
-    } catch (_) {}
+    } catch (err) {
+      console.error('Unable to create AudioContext', err);
+      this.audioContext = null;
+    }
   }
 
-  public writeInt(samples) {
+  public writeInt(samples: Array<number>) {
     // takes the Array of integers from papu.ts
     if (this.audioContext) {
       const source = this.audioContext.createBufferSource();

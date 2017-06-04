@@ -1,7 +1,6 @@
 import Utils from './../utils';
-import { IMapper } from './IMapper';
 
-export class Mapper0 implements IMapper {
+export class Mapper0 {
   protected nes;
 
   protected joy1StrobeState: number;

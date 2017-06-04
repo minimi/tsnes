@@ -2,7 +2,7 @@ let path = require('path');
 
 module.exports = {
   entry: './src/app.ts',
-
+  devtool: "source-map",
   output: {
     filename: 'jsnes.js',
     path: path.resolve(__dirname, 'dist')
@@ -17,6 +17,7 @@ module.exports = {
       }
     ]
   },
+
   resolve: {
     extensions: [".tsx", ".ts", ".js"]
   }

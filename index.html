@@ -2,133 +2,101 @@
 <html>
 
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8">
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1">
-  <link href="assets/css/modern.css" rel="stylesheet"/>
-  <link href="assets/css/modern-responsive.css" rel="stylesheet"/>
-  <link href="assets/css/style.css" rel="stylesheet"/>
+  <link href="assets/css/style.css" rel="stylesheet">
   <title>JSNES: A JavaScript NES emulator</title>
 </head>
 
-<body class="modern-ui">
+<body>
 
-<div class="page">
-  <div class="nav-bar">
-    <div class="nav-bar-inner padding10">
-      <span class="pull-menu"></span>
-      <a href="/"><span class="element brand"> JSNES </span></a>
-    </div>
+
+<main id="nes-emulator">
+  <canvas id="nes-screen" width="256" height="240" class="not-zoomed"></canvas>
+
+  <div id="nes-roms">
+    <select id="rom-select">
+      <option>Select a ROM...</option>
+    </select>
   </div>
-</div>
 
-<div class="page page-index">
-  <div class="page-region">
-    <div class="page-region-content">
-      <div class="grid">
-        <div class="row">
-          <div class="span12 padding10 fg-color-darken">
+  <p>or use a local file below or by using drag & drop onto the nes display</p>
 
-            <div id="nes-emulator">
-              <canvas id="nes-screen" width="256" height="240" class="not-zoomed"></canvas>
-              <ul class="replies">
-                <li class="bg-color-purple">
-                  <b class="sticker sticker-left sticker-color-purple"></b>
-                  <div class="avatar"><img src=""/></div>
-                  <div class="reply">
-                    <div class="author">Do you know</div>
-                    <div class="text">you can load local ROMs by dragging & dropping onto the nes display?</div>
-                  </div>
-                </li>
-              </ul>
-              <div id="nes-roms" class="input-control select">
-                <select id="rom-select">
-                  <option>Select a ROM...</option>
-                </select>
-              </div>
-              <p>or use a local file below or by using drag & drop onto the nes display</p>
-              <input id="rom-file" type="file"/>
+  <input id="rom-file" type="file"/>
 
-              <div id="nes-controls">
-                <button id="btn-pause" type="button" class="nes-pause bg-color-orange" disabled><i
-                  class="icon-play"></i>Play
-                </button>
-                <button id="btn-restart" type="button" class="nes-restart bg-color-red" disabled><i
-                  class="icon-loop"></i>Restart
-                </button>
-                <button id="btn-sound" type="button" class="nes-enablesound bg-color-green" disabled><i
-                  class="icon-volume-3"></i>Enable Sound
-                </button>
-                <button id="btn-zoom" type="button" class="nes-zoom bg-color-purple"><i class="icon-zoom-in"></i>Zoom in
-                </button>
-              </div>
-              <p id="nes-status"><img src="assets/images/preloader-w8-line-black.gif"></p>
-            </div>
-            <details id="nes-help">
-              <summary>Controls</summary>
-              <table id="controls">
-                <tr>
-                  <th>Button</th>
-                  <th>Player 1</th>
-                  <th>Player 2</th>
-                </tr>
-                <tr>
-                  <td>Left</td>
-                  <td>Left</td>
-                  <td>Num-4</td>
-                <tr>
-                  <td>Right</td>
-                  <td>Right</td>
-                  <td>Num-6</td>
-                </tr>
-                <tr>
-                  <td>Up</td>
-                  <td>Up</td>
-                  <td>Num-8</td>
-                </tr>
-                <tr>
-                  <td>Down</td>
-                  <td>Down</td>
-                  <td>Num-2</td>
-                </tr>
-                <tr>
-                  <td>A</td>
-                  <td>X</td>
-                  <td>Num-7</td>
-                </tr>
-                <tr>
-                  <td>B</td>
-                  <td>Z/Y</td>
-                  <td>Num-9</td>
-                </tr>
-                <tr>
-                  <td>Start</td>
-                  <td>Enter</td>
-                  <td>Num-1</td>
-                </tr>
-                <tr>
-                  <td>Select</td>
-                  <td>Ctrl</td>
-                  <td>Num-3</td>
-                </tr>
-              </table>
-            </details>
-          </div>
-        </div>
-      </div>
-
-    </div>
+  <div id="nes-controls">
+    <button id="btn-pause" type="button" class="nes-pause bg-color-orange" disabled><i
+      class="icon-play"></i>Play
+    </button>
+    <button id="btn-restart" type="button" class="nes-restart bg-color-red" disabled><i
+      class="icon-loop"></i>Restart
+    </button>
+    <button id="btn-sound" type="button" class="nes-enablesound bg-color-green" disabled><i
+      class="icon-volume-3"></i>Enable Sound
+    </button>
+    <button id="btn-zoom" type="button" class="nes-zoom bg-color-purple"><i class="icon-zoom-in"></i>Zoom in
+    </button>
   </div>
-</div>
+  <p id="nes-status"><img src="assets/images/preloader-w8-line-black.gif"></p>
+</main>
 
-<div class="page">
-  <div class="nav-bar">
+<details id="nes-help">
+  <summary>Controls</summary>
+  <table id="controls">
+    <tr>
+      <th>Button</th>
+      <th>Player 1</th>
+      <th>Player 2</th>
+    </tr>
+    <tr>
+      <td>Left</td>
+      <td>Left</td>
+      <td>Num-4</td>
+    <tr>
+      <td>Right</td>
+      <td>Right</td>
+      <td>Num-6</td>
+    </tr>
+    <tr>
+      <td>Up</td>
+      <td>Up</td>
+      <td>Num-8</td>
+    </tr>
+    <tr>
+      <td>Down</td>
+      <td>Down</td>
+      <td>Num-2</td>
+    </tr>
+    <tr>
+      <td>A</td>
+      <td>X</td>
+      <td>Num-7</td>
+    </tr>
+    <tr>
+      <td>B</td>
+      <td>Z/Y</td>
+      <td>Num-9</td>
+    </tr>
+    <tr>
+      <td>Start</td>
+      <td>Enter</td>
+      <td>Num-1</td>
+    </tr>
+    <tr>
+      <td>Select</td>
+      <td>Ctrl</td>
+      <td>Num-3</td>
+    </tr>
+  </table>
+</details>
+
+<footer>
         <span class="element">
             2014, jsnes modified version by <a class="fg-color-white" href="https://github.com/minimi/jsnes">minimi</a>. Original code by <a
           class="fg-color-white" href="https://github.com/bfirsh/jsnes">bfirsh</a>.
         </span>
-  </div>
-</div>
+</footer>
 
 <!--script src="assets/lib/dynamicaudio-min.js" type="text/javascript"></script>
 <script src="src/nes.ts" type="text/javascript"></script>

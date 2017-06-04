@@ -106,7 +106,7 @@ export namespace PAPU {
     this.initDACtables();
 
     // Init sound registers:
-    for (var i = 0; i < 0x14; i++) {
+    for (let i = 0; i < 0x14; i++) {
       if (i === 0x10) {
         this.writeReg(0x4010, 0x10);
       }
@@ -544,7 +544,7 @@ export namespace PAPU {
     // Samples the channels, mixes the output together,
     // writes to buffer and (if enabled) file.
     sample: function () {
-      var sq_index, tnd_index;
+      let sq_index, tnd_index;
 
       if (this.accCount > 0) {
 
@@ -635,7 +635,7 @@ export namespace PAPU {
 
       // Write full buffer
       if (this.bufferIndex === this.sampleBuffer.length) {
-        this.nes.ui.writeAudio(this.sampleBuffer);
+        this.nes.writeAudio(this.sampleBuffer);
         this.sampleBuffer = new Array(this.bufferSize * 2);
         this.bufferIndex = 0;
       }

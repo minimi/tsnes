@@ -17,7 +17,6 @@
  */
 
 import {Mappers} from './mappers';
-import {IMapper} from './mappers/IMapper';
 import {PPU} from './ppu';
 
 export class ROM {
@@ -223,11 +222,11 @@ export class ROM {
     return typeof Mappers[this.mapperType] !== 'undefined';
   }
 
-  createMapper(): IMapper | null {
+  createMapper() {
     if (this.mapperSupported()) {
       return new Mappers[this.mapperType](this.nes);
     } else {
-      this.nes.ui.updateStatus('This ROM uses a mapper not supported by JSNES: ' + this.getMapperName() + '(' + this.mapperType + ')');
+      this.nes.updateStatus('This ROM uses a mapper not supported by JSNES: ' + this.getMapperName() + '(' + this.mapperType + ')');
       return null;
     }
   }

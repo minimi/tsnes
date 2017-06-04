@@ -63,4 +63,4 @@ export default class Utils {
     public static strToBool(str) {
         return (/^(true|1)$/i).test(str);
     }
-};
+}

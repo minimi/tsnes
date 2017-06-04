@@ -1,7 +1,7 @@
 import {Mapper0} from './Mapper0';
-import {IMapper} from './IMapper';
 
-export class Mapper4 extends Mapper0 implements IMapper {
+
+export class Mapper4 extends Mapper0 {
 
   protected CMD_SEL_2_1K_VROM_0000: number;
   protected CMD_SEL_2_1K_VROM_0800: number;
