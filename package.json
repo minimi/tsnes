@@ -1,6 +1,6 @@
 {
   "name": "tsnes",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A JavaScript NES emulator",
   "license": "GPL-3.0",
   "scripts": {

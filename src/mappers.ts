@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { Mapper0 } from './mappers/Mapper0';
 import { Mapper1 } from './mappers/Mapper1';
 import { Mapper2 } from './mappers/Mapper2';
+import { Mapper3 } from './mappers/Mapper3';
 import { Mapper4 } from './mappers/Mapper4';
 import { Mapper5 } from './mappers/Mapper5';
 import { Mapper7 } from './mappers/Mapper7';
@@ -31,6 +32,7 @@ export let Mappers = [];
 Mappers[0] = Mapper0;
 Mappers[1] = Mapper1;
 Mappers[2] = Mapper2;
+Mappers[2] = Mapper3;
 Mappers[4] = Mapper4;
 Mappers[5] = Mapper5;
 Mappers[7] = Mapper7;
