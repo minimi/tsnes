@@ -1,4 +1,4 @@
-export default class WebAudio {
+export class WebAudio {
 
   public audioContext: AudioContext;
 

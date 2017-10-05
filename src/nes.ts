@@ -21,7 +21,7 @@ import {PPU} from './ppu';
 import {PAPU} from './papu';
 import {ROM} from './rom';
 import {Keyboard} from './keyboard';
-import WebAudio from './webaudio';
+import {WebAudio} from './webaudio';
 
 type JSNESOpts = {
   preferredFrameRate?: number,
